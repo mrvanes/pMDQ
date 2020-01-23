@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
-# sub.py
+# subscriber.py
 
 from flask import Flask, url_for, render_template
 from flask_websub.subscriber import Subscriber, SQLite3TempSubscriberStorage, \
                                     SQLite3SubscriberStorage, discover
 
-import sys
+from urllib.request import urlopen
+from urllib.parse import unquote
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'sub.websub.local'
 
-subscriber = Subscriber(SQLite3SubscriberStorage('sub.sqlite3'),
-                        SQLite3TempSubscriberStorage('sub.sqlite3'))
+subscriber = Subscriber(SQLite3SubscriberStorage('subscriber.sqlite3'),
+                        SQLite3TempSubscriberStorage('subscriber.sqlite3'))
 app.register_blueprint(subscriber.build_blueprint(url_prefix='/callbacks'))
 
+#Metadata store
+mdstor = {}
 
 @subscriber.add_success_handler
 def on_success(topic_url, callback_id, mode):
     print("SUCCESS!", topic_url, callback_id, mode)
-
+    global mdstor
+    topic_url = unquote(topic_url)
+    mdsrc = urlopen(topic_url).read().decode('utf-8')
+    mdstor[topic_url] = mdsrc    
 
 @subscriber.add_error_handler
 def on_error(topic_url, callback_id, msg):
@@ -28,16 +34,22 @@ def on_error(topic_url, callback_id, msg):
 @subscriber.add_listener
 def on_topic_change(topic_url, callback_id, body):
     print('TOPIC CHANGED!', topic_url, callback_id, body)
+    global mdstor
+    topic_url = unquote(topic_url)
+    mdsrc = urlopen(topic_url).read().decode('utf-8')
+    mdstor[topic_url] = mdsrc    
 
 
-if len(sys.argv) == 2:
-    published_url = sys.argv[1]
-else:
-    published_url = 'http://hub.websub.local/'
+published_url = 'http://hub.websub.local/md?id=http://pub.websub.local/md'
 
 @app.route('/')
 def topic():
-    return render_template('subscriber.html')
+    global mdstor
+    msg = "Subscriber home"
+    md = ""
+    for mdid,v in mdstor.items():
+        md += "{}<br>\n{}<br>\n".format(mdid, v)
+    return render_template('subscriber.html', message=msg, metadata=md)
 
 @app.route('/subscribe')
 def subscribe_route():
