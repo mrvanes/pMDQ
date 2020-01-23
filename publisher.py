@@ -31,13 +31,14 @@ def validate_topic_existence(callback_url, topic_url, *args):
     with app.app_context():
         if topic_url.startswith('http://pub.websub.local/'):
             return  # pass validation
-        if topic_url != url_for('topic', _external=True):
+        if topic_url != url_for('md', _external=True):
             return "Topic not allowed"
 
 
 hub.register_validator(validate_topic_existence)
 hub.schedule_cleanup()  # cleanup expired subscriptions once a day, by default
 
+mdversion = 1
 
 @app.before_first_request
 def cleanup():
@@ -47,15 +48,24 @@ def cleanup():
 
 @app.route('/')
 @publisher()
-def topic():
-    return render_template('publisher.html')
+def root():
+    msg = "Publisher home"
+    return render_template('publisher.html', message=msg)
 
+@app.route('/md')
+@publisher()
+def md():
+    md = "[pub]metadata-{}[pub]".format(mdversion)
+    return md
 
 @app.route('/update_now')
+@publisher()
 def update_now():
-    hub.send_change_notification.delay(url_for('topic', _external=True))
-    return "Notification send!"
-
+    global mdversion
+    mdversion += 1
+    hub.send_change_notification.delay(url_for('md', _external=True))
+    msg = "Notification send!"
+    return render_template('publisher.html', message=msg)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
