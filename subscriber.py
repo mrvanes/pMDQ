@@ -37,8 +37,7 @@ else:
 
 @app.route('/')
 def topic():
-    msg = "Subscriber home"
-    return render_template('sub.html', message=msg)
+    return render_template('subscriber.html')
 
 @app.route('/subscribe')
 def subscribe_route():

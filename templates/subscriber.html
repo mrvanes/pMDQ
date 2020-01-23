@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- templates/server_example.html -->
+<html>
+  <head>
+    <title>WebSub test</title>
+    {{ websub_self_link }}
+    {{ websub_hub_link }}
+  </head>
+  <body>
+    <p>{{ message }}</p>
+    <h3>Subscriber</h3>
+    <p><a href="/subscribe">Subscribe</a></p>
+    <p><a href="/renew">Renew</a></p>
+    <p><a href="/unsubscribe">Unsubscribe</a></p>
+    <p><a href="/cleanup_and_renew_all">Cleanup and renew</a></p>
+  </body>
+</html>
