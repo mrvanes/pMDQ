@@ -1,3 +1,6 @@
+bin/
+lib/
+share/
 __pycache__
 _build
 .coverage
@@ -9,3 +12,4 @@ htmlcov
 junit
 server_data.sqlite3
 venv
+websub_key*
