@@ -13,3 +13,4 @@ junit
 server_data.sqlite3
 venv
 websub_key*
+*.sqlite3
