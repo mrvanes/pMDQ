@@ -1,4 +1,4 @@
 #!/bin/sh
 docker-compose start
 
-echo "To log in use: ssh -i websub_key websub@[phs]ub.websub.local"
+echo "To log in use: docker exec -ti pmdq_hub_1 /bin/bash"

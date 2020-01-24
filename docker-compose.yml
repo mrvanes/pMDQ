@@ -12,9 +12,7 @@ services:
       - sub.websub.local:172.31.1.4
     hostname: hub
     volumes:
-      - "./websub_key.pub:/tmp/authorized_keys"
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    #privileged: false
     tmpfs:
       - /run
       - /run/lock
@@ -38,9 +36,7 @@ services:
       - sub.websub.local:172.31.1.4
     hostname: pub
     volumes:
-      - "./websub_key.pub:/tmp/authorized_keys"
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    #privileged: false
     tmpfs:
       - /run
       - /run/lock
@@ -64,9 +60,7 @@ services:
       - sub.websub.local:172.31.1.4
     hostname: sub
     volumes:
-      - "./websub_key.pub:/tmp/authorized_keys"
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    #privileged: false
     tmpfs:
       - /run
       - /run/lock
