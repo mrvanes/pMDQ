@@ -31,9 +31,9 @@ The websub code is installed in
 
 Start the respective services by running the run scripts on each host:
 ```
-/opt/websub/run_publisher.sh
-/opt/websub/run_hub.sh
-/opt/websub/run_subscriber.sh
+/opt/websub/run_publisher.sh (on pub docker)
+/opt/websub/run_hub.sh (on hub docker)
+/opt/websub/run_subscriber.sh (on sub docker)
 ```
 
 Now open three tabs in a browser
