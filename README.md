@@ -71,3 +71,8 @@ hub: ```[hub][pub]metadata-2[pub][hub]```
 sub: ```[hub][pub]metadata-2[pub][hub]```
 
 The update on pub automatically triggered an update on sub, via pub's callback on hub's subscriber. This can all be checked by the logging in the running applications in the dockers.
+
+You can stop the dockers on your host by running
+```
+docker-compose stop
+```
