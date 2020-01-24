@@ -46,10 +46,7 @@ published_url = 'http://hub.websub.local/md?id=http://pub.websub.local/md'
 def topic():
     global mdstor
     msg = "Subscriber home"
-    md = ""
-    for mdid,v in mdstor.items():
-        md += "{}<br>\n{}<br>\n".format(mdid, v)
-    return render_template('subscriber.html', message=msg, metadata=md)
+    return render_template('subscriber.html', message=msg, metadata=mdstor)
 
 @app.route('/subscribe')
 def subscribe_route():
