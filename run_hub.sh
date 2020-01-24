@@ -1,3 +1,5 @@
 #!/bin/sh
-celery -A hub.celery worker -l info
+cd /opt/websub
+/opt/websub/bin/celery -A hub.celery worker -l info &
+/opt/websub/bin/python /opt/websub/hub.py
 
