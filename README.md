@@ -44,11 +44,15 @@ http://sub.websub.local/
 ```
 
 On the pub, check the Metadata
-```[pub]metadata-1[pub]```
+```
+[pub]metadata-1[pub]
+```
 The [pub] parts designate imaginative pub-signature.
 
 On the hub, click "Subscribe" and return to the home page. Check metadata.
-```[hub][pub]metadata-1[pub][hub]```
+```
+[hub][pub]metadata-1[pub][hub]
+```
 The [hub] parts designate imaginative hub-signature, the metadata-1 is the original pub md topic.
 
 Now on the sub, click "Subscribe" and return home, the page will show metadata on the bottom:
@@ -58,9 +62,12 @@ http://hub.websub.local/md?id=http://pub.websub.local/md
 ```
 The url designates hub's metadata topic, and the line below the hub-signed metadata of pub.
 
-Now, on the pub click "Update" and check the metadata on pub, hub and sub:
+Now, on the pub click "Update" (this will increase the metadata version by 1) and check the metadata on pub, hub and sub:
+
 pub: ```[pub]metadata-2[pub]```
+
 hub: ```[hub][pub]metadata-2[pub][hub]```
-sub: ```[pub]metadata-3[pub]```
+
+sub: ```[hub][pub]metadata-2[pub][hub]```
 
 The update on pub automatically triggered an update on sub, via pub's callback on hub's subscriber. This can all be checked by the logging in the running applications in the dockers.
