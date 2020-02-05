@@ -31,8 +31,8 @@ app.config['PUBLISH_SUPPORTED'] = True
 hub = Hub(SQLite3HubStorage('hub.sqlite3'), celery, **app.config)
 app.register_blueprint(hub.build_blueprint(url_prefix='/hub'))
 
-subscriber = Subscriber(SQLite3SubscriberStorage('sub.sqlite3'),
-                        SQLite3TempSubscriberStorage('sub.sqlite3'))
+subscriber = Subscriber(SQLite3SubscriberStorage('hubsub.sqlite3'),
+                        SQLite3TempSubscriberStorage('hubsub.sqlite3'))
 app.register_blueprint(subscriber.build_blueprint(url_prefix='/callbacks'))
 
 #Metadata storage
