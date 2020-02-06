@@ -42,7 +42,7 @@ mdstor = {}
 def on_success(topic_url, callback_id, mode):
     print("SUCCESS!", topic_url, callback_id, mode)
     global mdstor
-    topic_url = unquote(topic_url)
+    #topic_url = unquote(topic_url)
     mdsrc = urlopen(topic_url).read().decode('utf-8')
     mdstor[topic_url] = mdsrc
 
@@ -66,7 +66,7 @@ def on_topic_change(topic_url, callback_id, body):
 
 def validate_topic_existence(callback_url, topic_url, *args):
     with app.app_context():
-        if topic_url.startswith('http://hub.websub.local/'):
+        if topic_url.startswith('http://pub.websub.local/'):
             return  # pass validation
         if topic_url != url_for('topic', _external=True):
             return "Topic not allowed"
@@ -97,17 +97,16 @@ def md():
     md = "[hub]{}[hub]".format(mdsrc)
     return md
 
+# The test metadata on pub
+published_url = 'http://pub.websub.local/entities/https:%2F%2Fidp.mrvanes.com%2Fsaml%2Fsaml2%2Fidp%2Fmetadata.php'
 
 # Hub endpoint
-@app.route('/update_now')
+@app.route('/update/<id>')
 @publisher()
-def update_now():
-    topic = "http://hub.websub.local/md?id={}".format(quote("http://pub.websub.local/md", safe=':'))
-    print("update: {}".format(topic))
-    hub.send_change_notification.delay(topic)
+def update(id):
+    print("update: {}".format(id))
+    hub.send_change_notification.delay(id)
     return "Notification send!"
-
-published_url = 'http://pub.websub.local/md'
 
 # Subscriber endpoints
 @app.route('/subscribe')
