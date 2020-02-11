@@ -13,6 +13,7 @@ services:
     hostname: hub
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "./pyFF:/opt/pyFF"
     tmpfs:
       - /run
       - /run/lock
@@ -37,6 +38,7 @@ services:
     hostname: pub
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "./pyFF:/opt/pyFF"
     tmpfs:
       - /run
       - /run/lock
@@ -61,6 +63,7 @@ services:
     hostname: sub
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "./pyFF:/opt/pyFF"
     tmpfs:
       - /run
       - /run/lock
