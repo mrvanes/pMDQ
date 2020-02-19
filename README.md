@@ -4,101 +4,96 @@ pMDQ Test
 An implementation of a WebSub hub using Flask-websub, an nginx publisher (metadata source) and subscriber in pyFF.
 
 ### Metadata source
-Nginx server publishing metadata in docroot, adding hub and self url in Link headers
+Nginx server publishing metadata in docroot, adding hub and self url in Link headers  
+Metadata source: ```config/nginx/html/idp.xml```  
+Metadata endpoint: ```http://idp.websub.local/idp.xml```  
+EntityID of metadata: ```http://idp.websub.local/idp```
 
-### Hub/Publisher
-Flask-websub Hub, accepting topic urls for pub.websub.local and hub.websub.local
-pyFF Subscriber/Publisher
+### Hub
+Flask-websub Hub, accepting topic urls for ```idp.websub.local``` and ```mdq.websub.local```
 
-### Subscribe
-pyFF Subscriber
+### MDQ
+pyFF Subscriber/Publisher  
+Metadata loaded from http://idp.websub.local/idp.xml
+
+### Metadata consumer
+pyFF Subscriber  
+Metadata loaded from http://mdq.websub.local/entities/http://idp.websub.local/idp
 
 ## Testing
-To build the pub/hub and sub dockers:
+To build the idp/hub/mdq and sp dockers:  
 ```./build.sh```
 
-Clone the pyFF websub branch of my fork in pyFF directory:
-```git clone https://github.com/mrvanes/pyFF.git -b websub```
-
-
-To start the pub/hub and sub dockers:
+To start the idp/hub/mdq and sp dockers:  
 ```./run.sh```
 
-To log in to the pub/hub and sub:
+To login on idp/hub/mdq and sp:  
 ```
-docker exec -ti pmdq_pub_1 /bin/bash
+docker exec -ti pmdq_idp_1 /bin/bash
 docker exec -ti pmdq_hub_1 /bin/bash
-docker exec -ti pmdq_sub_1 /bin/bash
+docker exec -ti pmdq_mdq_1 /bin/bash
+docker exec -ti pmdq_sp_1 /bin/bash
 ```
 
-Add this to your /etc/hosts file
+Add this to your /etc/hosts file  
 ```
 172.31.1.2      hub.websub.local
-172.31.1.3      pub.websub.local
-172.31.1.4      sub.websub.local
+172.31.1.3      mdq.websub.local
+172.31.1.4      idp.websub.local
+172.31.1.5      sp.websub.local
 ```
 
-In the dockers, the websub code is installed in
-```/opt/websub```
+In the dockers, the websub code is volume mounted on ```/opt/websub```  
+The pyFF fork is volume mounted on ```/opt/pyFF```
 
-In the dockers, the pyFF fork is volume mounted on
-```/opt/pyFF```
-
-On the metadata source (pub) nginx can be made publisher by using this nginx configuration in ```/etc/nginx/sites-enabled/default```
+Start the respective services by running the run scripts on each host:  
 ```
-        location / {
-                # First attempt to serve request as file, then
-                # as directory, then fall back to displaying a 404.
-                try_files $uri $uri/ =404;
-                add_header 'Link' '<$scheme://$host$request_uri>; rel="self", <http://hub.websub.local:8080/hub>; rel="hub"';
+/opt/websub/run_hub.sh (on hub docker)
+/opt/pyFF/run_pyff_mdq.sh (on mdq docker)
+/opt/pyFF/run_pyff_sp.sh (on sp docker)
 ```
 
-There should be valid metadata in ```/var/www/html/idp.xml``` with entityID ```http://pub.websub.local/idp```.
-
-The hub pyFF configuration points to ```http://pub.websub.local/idp.xml```
-
-The sub pyff configuration points to ```http://hub.websub.local/entities/http://pub.websub.local/idp```
-
-Start the respective services by running the run scripts on each host:
-
+Now open three tabs in a browser  
 ```
-    /opt/websub/run_hub.sh (on hub docker)
-    /opt/pyFF/run_pyff_hub.sh (on hub docker)
-    /opt/pyFF/run_pyff_sub.sh (on sub docker)
+http://idp.websub.local/idp.xml
+http://mdq.websub.local/entities/http://idp.websub.local/idp
+http://sp.websub.local/entities/http://idp.websub.local/idp
 ```
 
-Now open three tabs in a browser
+On the idp, check the metadata  
 ```
-http://pub.websub.local/
-http://hub.websub.local/
-http://sub.websub.local/
+http://idp.websub.local/idp.xml
 ```
 
-On the pub, check the Metadata
+On the mdq, check the metadata of entityID http://idp.websub.local/idp  
 ```
-http://pub.websub.local/idp.xml
-```
-
-On the hub, check the entityID of the published metadata on pub
-```
-http://hub.websub.local/entities/http://pub.websub.local/idp
+http://mdq.websub.local/entities/http://idp.websub.local/idp
 ```
 
-On the sub check the entityID of the published metadata on hub
+On the sp check the metadata of entityID http://idp.websub.local/idp  
 ```
-http://sub.websub.local/entities/http://hub.websub.local/entities/http://pub.websub.local/idp
-```
-
-Now update the original source metadata and to update metadata call the following URL using curl:
-
-```
-curl -X POST http://hub.websub.local/api/update -F 'entry=http://pub.websub.local/idp.xml'
+http://sp.websub.local/entities/http://idp.websub.local/idp
 ```
 
-See the metadata updated on the hub and the sub.
+Now update the original source metadata and update metadata by calling one of the following URLs using curl:
+
+For a non-websub metadata provider (without hub) directly call the pyFF MDQ update endpoint:  
+
+```
+curl -X POST http://mdq.websub.local/api/update -F 'entry=http://idp.websub.local/idp'
+```
+
+For a websub capable metadata provider notify the hub:  
+
+```
+curl -X POST http://hub.websub.local/update -F 'topic=http://idp.websub.local/idp.xml'
+```
 
 
-You can stop the dockers on your host by running
+See the metadata updated on the idp, mdq and the sp.
+
+
+You can stop the dockers on your host by running:  
 ```
 docker-compose stop
 ```
