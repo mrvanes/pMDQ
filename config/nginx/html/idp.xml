@@ -22,6 +22,6 @@
   <md:Organization>
     <md:OrganizationName xml:lang="en">WebSub IdP</md:OrganizationName>
     <md:OrganizationDisplayName xml:lang="en">WebSub IdP</md:OrganizationDisplayName>
-    <md:OrganizationURL xml:lang="en">http://pub.websub.local/</md:OrganizationURL>
+    <md:OrganizationURL xml:lang="en">http://idp.websub.local/</md:OrganizationURL>
   </md:Organization>
 </md:EntityDescriptor>
