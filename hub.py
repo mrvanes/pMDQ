@@ -66,7 +66,8 @@ def on_topic_change(topic_url, callback_id, body):
 
 def validate_topic_existence(callback_url, topic_url, *args):
     with app.app_context():
-        if topic_url.startswith('http://pub.websub.local/'):
+        if (topic_url.startswith('http://idp.websub.local/') or
+            topic_url.startswith('http://mdq.websub.local/')):
             return  # pass validation
         if topic_url != url_for('topic', _external=True):
             return "Topic not allowed"
