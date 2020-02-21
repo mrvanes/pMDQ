@@ -14,6 +14,8 @@ from urllib.parse import quote, unquote
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'hub.websub.local'
 app.config['REQUEST_TIMEOUT'] = 3
+app.config['BACKOFF_BASE'] = 1.0
+
 celery = Celery('hub', broker='redis://localhost:6379')
 
 # initialise hub
