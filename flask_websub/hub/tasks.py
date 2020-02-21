@@ -2,6 +2,7 @@ import requests
 
 import base64
 import random
+import json
 
 from ..utils import get_content, calculate_hmac, request_url, warn, uuid4
 from ..errors import NotificationError
@@ -22,7 +23,8 @@ def send_change_notification(hub, topic_url, updated_content=None):
         body = base64.b64decode(updated_content['content'])
     else:
         body, updated_content = get_new_content(hub.config, topic_url)
-    b64_body = updated_content['content']
+    #b64_body = updated_content['content']
+    b64_body = base64.b64encode(bytes('', 'utf-8')).decode('ascii')
 
     headers = updated_content['headers']
     link_header = headers.get('Link', '')
@@ -74,8 +76,10 @@ def make_request_retrying(hub, self, topic_url, callback, headers, b64_body):
         resp = request_url(hub.config, 'POST', callback, headers=headers,
                            data=body)
         assert 200 <= resp.status_code < 300 or resp.status_code == 410
+        warn("Notification succeeded for callback: {}".format(callback), None)
     except (requests.exceptions.RequestException, AssertionError) as e:
-        warn("Notification failed", e)
+        #warn("Notification failed", e)
+        warn("Notification failed for callback: {}".format(callback), None)
         countdown = random.uniform(0, backoff_base * 2 ** self.request.retries)
         self.retry(countdown=countdown)
     else:

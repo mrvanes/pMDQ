@@ -13,7 +13,7 @@ from urllib.parse import quote, unquote
 # app & celery
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'hub.websub.local'
-app.config['REQUEST_TIMEOUT'] = 10
+app.config['REQUEST_TIMEOUT'] = 3
 celery = Celery('hub', broker='redis://localhost:6379')
 
 # initialise hub
@@ -27,7 +27,7 @@ hub = Hub(SQLite3HubStorage('hub.sqlite3'), celery, **app.config)
 app.register_blueprint(hub.build_blueprint(url_prefix='/hub'))
 
 def validate_topic_existence(callback_url, topic_url, *args):
-    print("validate: {}".format(topic_url))
+    #print("validate: {}".format(topic_url))
     with app.app_context():
         if (topic_url.startswith('http://idp.websub.local/') or
             topic_url.startswith('http://mdq.websub.local/')):
