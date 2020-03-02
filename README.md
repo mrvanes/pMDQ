@@ -46,6 +46,24 @@ Add this to your /etc/hosts file
 In the dockers, the websub code is volume mounted on ```/opt/websub```  
 The pyFF fork is volume mounted on ```/opt/pyFF```
 
+Create a virtualenv and install Flask-websub in the hub docker:  
+```
+cd /opt/websub
+virtualenv --python=python3 .
+bin/pip install -e .
+bin/pip install celery
+bin/pip install redis
+```
+
+Create a virtualenv and install pyFF in the mdq docker:  
+```
+cd /opt/pyFF
+virtualenv --python=python3 .
+bin/pip install -e .
+openssl req -nodes -x509 -newkey rsa:4096 -keyout sign.key -out sign.crt -days 3650 -subj "CN=websub.local"
+```
+Because of the shared volume mount, this also installs pyFF on sp docker.
+
 Start the respective services by running the run scripts on each host:  
 ```
 /opt/websub/run_hub.sh (on hub docker)
