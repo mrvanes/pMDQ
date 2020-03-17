@@ -111,7 +111,4 @@ curl -X POST http://hub.websub.local/update -F 'topic=http://idp.websub.local/id
 See the metadata updated on the idp, mdq and the sp.
 
 
-You can stop the dockers on your host by running:  
-```
-docker-compose stop
-```
+You can stop the dockers on your host by CTRL-C'ing ```run.sh``` on your host
