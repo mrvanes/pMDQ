@@ -31,7 +31,7 @@ app.register_blueprint(hub.build_blueprint(url_prefix='/hub'))
 def validate_topic_existence(callback_url, topic_url, *args):
     #print("validate: {}".format(topic_url))
     with app.app_context():
-        if (topic_url.startswith('http://idp.websub.local/') or
+        if (topic_url.startswith('http://feda.websub.local/') or
             topic_url.startswith('http://mdq.websub.local/')):
             return  # pass validation
         if topic_url != url_for('topic', _external=True):
