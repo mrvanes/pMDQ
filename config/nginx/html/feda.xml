@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="http://idp.websub.local/idp">
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="http://feda.websub.local/feda">
   <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <md:KeyDescriptor use="signing">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -20,8 +20,8 @@
     <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://pub.websub.local/sso"/>
   </md:IDPSSODescriptor>
   <md:Organization>
-    <md:OrganizationName xml:lang="en">WebSub IdP</md:OrganizationName>
-    <md:OrganizationDisplayName xml:lang="en">WebSub IdP</md:OrganizationDisplayName>
-    <md:OrganizationURL xml:lang="en">http://idp.websub.local/</md:OrganizationURL>
+    <md:OrganizationName xml:lang="en">WebSub FedA Demo Test</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en">WebSub FedA</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en">http://feda.websub.local/</md:OrganizationURL>
   </md:Organization>
 </md:EntityDescriptor>
