@@ -43,7 +43,7 @@ def warn(msg, exc_info):
 
 def calculate_hmac(algorithm, secret, data):
     hash = getattr(hashlib, algorithm)
-    return hmac.new(secret.encode('UTF-8'), data, hash).hexdigest()
+    return hmac.new(secret.encode('UTF-8'), data.encode('UTF-8'), hash).hexdigest()
 
 
 def get_content(config, topic_url):
